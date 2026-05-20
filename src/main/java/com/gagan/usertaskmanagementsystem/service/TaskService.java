@@ -7,6 +7,8 @@ import com.gagan.usertaskmanagementsystem.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class TaskService {
@@ -21,8 +23,15 @@ public class TaskService {
         Task task = new Task();
         task.setTitle(title);
         task.setStatus("PENDING");
-        task.setUser(user); // Links the task to its owner
+        task.setUser(user);
 
         return taskRepository.save(task);
+    }
+
+    public List<Task> getTasksByUserId(Integer userId) {
+        if (!userRepository.existsById(userId)) {
+            throw new RuntimeException("User not found with ID: " + userId);
+        }
+        return taskRepository.findByUserId(userId);
     }
 }
